@@ -11,19 +11,31 @@ random_array=(
 	"beet" 
 	"stroller"
 )
-close=1
-
-echo "What would you like to do with the array?"
-sleep 1
-echo "1. print all the words"
-echo "2. print a word of your liking"
-echo "1. add an element to the array"
-echo "1. delete an element from the array"
-
-while [$close -eq 1]; do
-	if []
-
 
 Print_array() {
-	echo ${random_array[@]}
+	for item in "${random_array[@]}"; do
+		echo "$item"
+	done
+	sleep 1
+
 }
+close=1
+
+
+
+while [ $close -eq 1 ]; do
+	echo "What would you like to do with the array?"
+	sleep 1
+	echo "1. print all the words"
+	echo "2. print a word of your liking"
+	echo "3. add an element to the array"
+	echo "4. delete an element from the array"
+	read -p "what is your choice" choice
+	if [ $choice -eq 1 ]; then
+		Print_array
+	else
+		echo "invalid"
+		exit
+	fi
+done
+
