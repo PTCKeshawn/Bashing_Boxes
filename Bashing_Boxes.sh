@@ -34,8 +34,7 @@ sleep 1
 
 add_item(){
 	read -p "what word do you want to add" word
-	read -p "where do you want to add the item in the array?"
-
+	read -p "where do you want to add the item in the array?" pos
 	 if [ "$pos" -ge 0 ] && [ "$pos" -le "${#random_array[@]}" ]; then
         # Splits the array to add the word
        random_array=("${random_array[@]:0:$pos}" "$word" "${random_array[@]:$pos}")
@@ -63,8 +62,8 @@ while [ $close -eq 1 ]; do
 	elif [ $choice -eq 2 ]; then
 		print_single_word
 	
-		
-	
+	elif [ $choice -eq 3 ]; then
+		add_item	
 	else
 		echo "invalid"
 		exit
