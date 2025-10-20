@@ -59,11 +59,10 @@ delete_item(){
 
 close=1
 
-
-
+echo "Welcome to Keshawn's array customizer!"
+sleep 1
 while [ $close -eq 1 ]; do
 	echo "What would you like to do with the array?"
-	sleep 1
 	echo "1. print all the words"
 	echo "2. print a word of your liking"
 	echo "3. add an element to the array"
@@ -74,7 +73,6 @@ while [ $close -eq 1 ]; do
 		Print_array
 	elif [ $choice -eq 2 ]; then
 		print_single_word
-	
 	elif [ $choice -eq 3 ]; then
 		add_item	
 	elif [ $choice -eq 4 ]; then
