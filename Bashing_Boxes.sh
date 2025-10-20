@@ -79,6 +79,9 @@ while [ $close -eq 1 ]; do
 		add_item	
 	elif [ $choice -eq 4 ]; then
 		delete_item	
+	elif [ $choice -eq 5 ]; then
+		echo "exiting..."
+		exit 
 	else
 		echo "invalid"
 		exit
