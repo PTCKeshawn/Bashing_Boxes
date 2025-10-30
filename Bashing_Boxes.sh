@@ -57,6 +57,24 @@ delete_item(){
 	fi
 }
 
+save_array(){
+	read -p "what would you like to name the file?" new_file
+	printf "%s\n" "${random_array[@]}" > "data/${new_file}.txt"
+	echo "saved as $new_file.txt"
+	sleep 1
+}
+
+load_array(){
+	read -p "Which file would you like to view? " file_to_view
+		if [[ -f "data/${file_to_view}.txt" ]]; then
+	    	echo "Contents of ${file_to_view}:"
+	    	cat "data/${file_to_view}.txt"
+	    	sleep 2
+		else
+	    	echo "File not found!"
+		fi
+
+}
 close=1
 
 echo "Welcome to Keshawn's array customizer!"
@@ -67,17 +85,25 @@ while [ $close -eq 1 ]; do
 	echo "2. print a word of your liking"
 	echo "3. add an element to the array"
 	echo "4. delete an element from the array"
-	echo "5. exit"
+	echo "5. save your array"
+	echo "6. load your array"
+	echo "7. exit"
 	read -p "what is your choice" choice
 	if [ $choice -eq 1 ]; then
 		Print_array
+		clear
 	elif [ $choice -eq 2 ]; then
 		print_single_word
+		clear
 	elif [ $choice -eq 3 ]; then
 		add_item	
 	elif [ $choice -eq 4 ]; then
 		delete_item	
 	elif [ $choice -eq 5 ]; then
+		save_array
+	elif [ $choice -eq 6 ]; then
+		load_array
+	elif [ $choice -eq 7 ]; then
 		echo "exiting..."
 		exit 
 	else
