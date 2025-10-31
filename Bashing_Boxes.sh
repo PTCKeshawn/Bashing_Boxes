@@ -75,6 +75,45 @@ load_array(){
 		fi
 
 }
+List_saved_arrays() {
+    echo "arrays:"
+    if compgen -G "data/*.txt" > /dev/null; then
+        ls data/*.txt | xargs -n 1 basename
+        sllep 1
+    else
+        echo "No saved arrays found."
+        sleep 1
+    fi
+}
+Delete_box() {
+    read -p "Which file would you like to delete? " file_to_delete
+    if [[ -f "data/${file_to_delete}.txt" ]]; then
+        rm "data/${file_to_delete}.txt"
+        echo "${file_to_delete}.txt deleted."
+        sleep 1
+    else
+        echo "File not found!"
+        sleep 1
+    fi
+}
+exiting(){
+	read -p "would you like to save before exiting? (y/n):" exit_read
+	if [[ $exit_read == "y" || $exit_read == "Y" ]]; then
+		save_array
+		echo "done!"
+		echo "exiting..."
+		sleep 1
+		exit 
+	elif [[ $exit_read == "n" || $exit_read == "N" ]]; then
+		echo "exiting..."
+		sleep 1
+		exit
+	else
+		echo "invalid!"
+	fi
+}
+
+
 close=1
 
 echo "Welcome to Keshawn's array customizer!"
@@ -87,7 +126,9 @@ while [ $close -eq 1 ]; do
 	echo "4. delete an element from the array"
 	echo "5. save your array"
 	echo "6. load your array"
-	echo "7. exit"
+	echo "7. list your saved arrays"
+	echo "8. delete your saved array"
+	echo "9. exit"
 	read -p "what is your choice" choice
 	if [ $choice -eq 1 ]; then
 		Print_array
@@ -104,8 +145,11 @@ while [ $close -eq 1 ]; do
 	elif [ $choice -eq 6 ]; then
 		load_array
 	elif [ $choice -eq 7 ]; then
-		echo "exiting..."
-		exit 
+		List_saved_arrays
+	elif [ $choice -eq 8 ]; then
+		Delete_box
+	elif [ $choice -eq 9 ]; then
+		exiting
 	else
 		echo "invalid"
 		exit
