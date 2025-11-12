@@ -1,17 +1,57 @@
 #!/bin/bash
-random_array=(
-	"cookie jar" 
-	"sweater" 
-	"sword" 
-	"curtain rod" 
-	"tree stump" 
-	"parasol" 
-	"mittens" 
-	"hockey puck" 
-	"beet" 
-	"stroller"
-)
 
+#array list
+
+Prompt_for_list(){
+	read -p -e"Would you like to:
+	 1) generate a new list of your choice
+	 2) start with a default array" list_choice
+
+	 case $list_choice in
+	 	1) 
+	 		;;
+	 	2)random_array=(
+			"cookie jar" 
+			"sweater" 
+			"sword" 
+			"curtain rod" 
+			"tree stump" 
+			"parasol" 
+			"mittens" 
+			"hockey puck" 
+			"beet" 
+			"stroller"
+		)
+		
+ 
+	 		;;
+	 	*)
+	 		;;
+	 esac
+}
+
+
+#for later purposes
+check_for_saved_array(){
+	:
+	# You will need to learn about $1 ($2..$3..ect) as "passed in values" and setting default values.
+	# check for data/default_array.txt file
+	#if its there, load that aray
+	#if its not there, set "random_array" to
+	#	random_array=(
+	#		"cookie jar" 
+	#		"sweater" 
+	#		"sword" 
+	#		"curtain rod" 
+	#		"tree stump" 
+	#		"parasol" 
+	#		"mittens" 
+	#		"hockey puck" 
+	#		"beet" 
+	#		"stroller")
+}
+
+#prints the whole array
 Print_array() {
 	for item in "${random_array[@]}"; do
 		echo "$item"
@@ -19,11 +59,14 @@ Print_array() {
 	sleep 1
 
 }
+
+#prints out a single element in the array
 print_single_word(){
 	
 	echo "enter the index of the object you want to print."
 	read -p "tip: The first element on the list is counted as 0." index
-#this line means if the user put a number that is 0 or higher, and smaller than the number of items in the array, then do the following
+	
+	#this line means if the user put a number that is 0 or higher, and smaller than the number of items in the array, then do the following
 	if [ "$index" -ge 0 ] && [ "$index" -lt "${#random_array[@]}" ]; then
 		echo "You chose: ${random_array[$index]}"
 	else
@@ -32,6 +75,7 @@ print_single_word(){
 sleep 1
 }
 
+#adds element to the array
 add_item(){
 	read -p "what word do you want to add" word
 	read -p "where do you want to add the item in the array?" pos
@@ -45,6 +89,7 @@ add_item(){
     fi
 }
 
+#deletes an element from the array
 delete_item(){
 	echo "enter the index of the word you want to delete"	
 	read -p "tip: The first word oh array starts with and index of 0 " delete
@@ -57,6 +102,7 @@ delete_item(){
 	fi
 }
 
+#saves the array to a file that is rereadable
 save_array(){
 	read -p "what would you like to name the file?" new_file
 	printf "%s\n" "${random_array[@]}" > "data/${new_file}.txt"
@@ -64,6 +110,7 @@ save_array(){
 	sleep 1
 }
 
+#loads the saved array
 load_array(){
 	read -p "Which file would you like to view? " file_to_view
 		if [[ -f "data/${file_to_view}.txt" ]]; then
@@ -75,17 +122,21 @@ load_array(){
 		fi
 
 }
+
+#lists the saved arrays you have saved
 List_saved_arrays() {
     echo "arrays:"
     if compgen -G "data/*.txt" > /dev/null; then
         ls data/*.txt | xargs -n 1 basename
-        sllep 1
+        sleep 1
     else
         echo "No saved arrays found."
         sleep 1
     fi
 }
-Delete_box() {
+
+#deletes a saved array
+Delete_array() {
     read -p "Which file would you like to delete? " file_to_delete
     if [[ -f "data/${file_to_delete}.txt" ]]; then
         rm "data/${file_to_delete}.txt"
@@ -96,64 +147,81 @@ Delete_box() {
         sleep 1
     fi
 }
+
+#exits the code
 exiting(){
 	read -p "would you like to save before exiting? (y/n):" exit_read
-	if [[ $exit_read == "y" || $exit_read == "Y" ]]; then
-		save_array
-		echo "done!"
-		echo "exiting..."
-		sleep 1
-		exit 
-	elif [[ $exit_read == "n" || $exit_read == "N" ]]; then
-		echo "exiting..."
-		sleep 1
-		exit
-	else
-		echo "invalid!"
-	fi
+	case $exit_read in
+		"y"|"Y") save_array 
+			 exit
+			;;
+		"n"|"N") echo "exiting..."
+			 sleep 1
+			 exit
+			 ;;
+		*) echo -e "
+			That was an invalid selection. 
+			Please try again."
+			sleep 2
+			display_main_menu
+			;;
+	esac
 }
 
-
-close=1
-
+#first welcone message
 echo "Welcome to Keshawn's array customizer!"
 sleep 1
-while [ $close -eq 1 ]; do
-	echo "What would you like to do with the array?"
-	echo "1. print all the words"
-	echo "2. print a word of your liking"
-	echo "3. add an element to the array"
-	echo "4. delete an element from the array"
-	echo "5. save your array"
-	echo "6. load your array"
-	echo "7. list your saved arrays"
-	echo "8. delete your saved array"
-	echo "9. exit"
-	read -p "what is your choice" choice
-	if [ $choice -eq 1 ]; then
-		Print_array
-		clear
-	elif [ $choice -eq 2 ]; then
-		print_single_word
-		clear
-	elif [ $choice -eq 3 ]; then
-		add_item	
-	elif [ $choice -eq 4 ]; then
-		delete_item	
-	elif [ $choice -eq 5 ]; then
-		save_array
-	elif [ $choice -eq 6 ]; then
-		load_array
-	elif [ $choice -eq 7 ]; then
-		List_saved_arrays
-	elif [ $choice -eq 8 ]; then
-		Delete_box
-	elif [ $choice -eq 9 ]; then
-		exiting
-	else
-		echo "invalid"
-		exit
-	fi
 
-done
+#displays the options user has
+display_main_menu(){
+	clear
+	echo -e "
+		| Main Menu
+		|-----------
+		| 1) print all the words
+		| 2) print a word of your liking
+		| 3) add an element to the array
+		| 4) delete an element from the array
+		| 5) save your array
+		| 6) load your array
+		| 7) list your saved arrays
+		| 8) delete your saved array
+		| 9) exit
+		"
+	read -p "what is your choice: " choice
+	check_user_input
+}
 
+#checks user input from 'display_main_menu'
+check_user_input(){
+		case $choice in
+		1) Print_array
+			;;
+		2) print_single_word
+			;;
+		3) add_item
+			;;
+		4) delete_item
+			;;
+		5) save_array
+			;;
+		6) load_array
+			;;
+		7) List_saved_arrays
+			;;
+		8) Delete_array
+			;;
+		9) exiting
+			;;
+		*) 
+			echo -e "
+			That was an invalid selection. 
+			Please try again."
+			sleep 2
+			display_main_menu
+			;;
+	esac
+}
+
+display_main_menu
+check_user_input
