@@ -8,9 +8,9 @@ Prompt_for_list(){
 	 2) start with a default array" list_choice
 
 	 case $list_choice in
-	 	1) 
+	 	1) read -p "enter"
 	 		;;
-	 	2)random_array=(
+	 	2)default_array=(
 			"cookie jar" 
 			"sweater" 
 			"sword" 
@@ -22,8 +22,10 @@ Prompt_for_list(){
 			"beet" 
 			"stroller"
 		)
-		
- 
+		random_array=("${default_array[@]}")
+		echo "Loaded default array."
+		echo "your array is : "
+		printf '%s\n' "${random_array[@]}"
 	 		;;
 	 	*)
 	 		;;
