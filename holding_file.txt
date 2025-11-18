@@ -1,0 +1,7 @@
+ile [$close -eq 1]; do
+	if []
+
+
+Print_array() {
+	echo ${random_array[@]}
+}

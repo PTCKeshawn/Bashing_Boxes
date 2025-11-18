@@ -1,14 +1,18 @@
 #!/bin/bash
 
 #array list
-
+close=1
 Prompt_for_list(){
-	read -p -e"Would you like to:
+	read -p "Would you like to:
 	 1) generate a new list of your choice
 	 2) start with a default array" list_choice
 
 	 case $list_choice in
-	 	1) read -p "enter"
+	 	1)  read -p "how many words do you want:  " size
+	 		check_for_saved_array
+			random_array=($(shuf -n "$size" data/'list random generator'/warehouse_of_objects.txt))
+			echo "Generated random word array:"
+			printf "%s\n" "${random_array[@]}"
 	 		;;
 	 	2)default_array=(
 			"cookie jar" 
@@ -27,30 +31,19 @@ Prompt_for_list(){
 		echo "your array is : "
 		printf '%s\n' "${random_array[@]}"
 	 		;;
-	 	*)
+	 	*)  echo "Invalid selection. Please enter 1 or 2."
+	 		sleep 1
+            Prompt_for_list 
 	 		;;
 	 esac
 }
 
 
-#for later purposes
 check_for_saved_array(){
-	:
-	# You will need to learn about $1 ($2..$3..ect) as "passed in values" and setting default values.
-	# check for data/default_array.txt file
-	#if its there, load that aray
-	#if its not there, set "random_array" to
-	#	random_array=(
-	#		"cookie jar" 
-	#		"sweater" 
-	#		"sword" 
-	#		"curtain rod" 
-	#		"tree stump" 
-	#		"parasol" 
-	#		"mittens" 
-	#		"hockey puck" 
-	#		"beet" 
-	#		"stroller")
+	if [ ! -f data/'list random generator'/warehouse_of_objects.txt ]; then
+   		echo "Error: words.txt not found."
+    	return
+	fi
 }
 
 #prints the whole array
@@ -155,11 +148,12 @@ exiting(){
 	read -p "would you like to save before exiting? (y/n):" exit_read
 	case $exit_read in
 		"y"|"Y") save_array 
-			 exit
+			 sleep 1
+			 close=0
 			;;
 		"n"|"N") echo "exiting..."
 			 sleep 1
-			 exit
+			 close=0
 			 ;;
 		*) echo -e "
 			That was an invalid selection. 
@@ -176,7 +170,6 @@ sleep 1
 
 #displays the options user has
 display_main_menu(){
-	clear
 	echo -e "
 		| Main Menu
 		|-----------
@@ -224,6 +217,10 @@ check_user_input(){
 			;;
 	esac
 }
+Prompt_for_list
 
-display_main_menu
-check_user_input
+while [ $close -eq 1 ]; do
+    display_main_menu
+done
+
+
