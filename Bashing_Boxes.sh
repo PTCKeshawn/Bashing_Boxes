@@ -4,11 +4,14 @@
 close=1
 Prompt_for_list(){
 	read -p "Would you like to:
-	 1) generate a new list of your choice
-	 2) start with a default array" list_choice
+	 1) Generate a new list of your choice
+	 2) Start with a default array
+	 3) Load a previously saved array
+	 : " list_choice
 
 	 case $list_choice in
 	 	1)  read -p "how many words do you want:  " size
+	 		echo " searching for word bank..."
 	 		check_for_saved_array
 			random_array=($(shuf -n "$size" data/'list random generator'/warehouse_of_objects.txt))
 			echo "Generated random word array:"
@@ -28,8 +31,13 @@ Prompt_for_list(){
 		)
 		random_array=("${default_array[@]}")
 		echo "Loaded default array."
+		sleep 1
 		echo "your array is : "
 		printf '%s\n' "${random_array[@]}"
+	 		;;
+	 	3)	load_array_to_use
+	 		set_array
+
 	 		;;
 	 	*)  echo "Invalid selection. Please enter 1 or 2."
 	 		sleep 1
@@ -37,11 +45,35 @@ Prompt_for_list(){
 	 		;;
 	 esac
 }
+load_array_to_use(){
+	if compgen -G "data/*.txt" > /dev/null; then
+	        echo "your saved arrays: "
+	        ls data/*.txt | xargs -n 1 basename
+	        sleep 1
+	    else
+	        echo "No saved arrays found."
+	        sleep 1
+	        Prompt_for_list
+	        return
+	    fi
+}
+set_array(){
+	read -p "Enter the name of the array to load (without .txt): " load_name
 
+            if [[ -f "data/${load_name}.txt" ]]; then
+                mapfile -t random_array < "data/${load_name}.txt"
+                echo "Loaded array: $load_name"
+                printf "%s\n" "${random_array[@]}"
+            else
+                echo "File not found!"
+                Prompt_for_list
+                return
+            fi
+}
 
 check_for_saved_array(){
 	if [ ! -f data/'list random generator'/warehouse_of_objects.txt ]; then
-   		echo "Error: words.txt not found."
+   		echo "Error: word bank not found not found."
     	return
 	fi
 }
@@ -185,6 +217,7 @@ display_main_menu(){
 		"
 	read -p "what is your choice: " choice
 	check_user_input
+
 }
 
 #checks user input from 'display_main_menu'
@@ -217,6 +250,7 @@ check_user_input(){
 			;;
 	esac
 }
+
 Prompt_for_list
 
 while [ $close -eq 1 ]; do
