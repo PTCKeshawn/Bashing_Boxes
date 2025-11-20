@@ -36,7 +36,8 @@ Prompt_for_list(){
 		printf '%s\n' "${random_array[@]}"
 	 		;;
 	 	3)	load_array_to_use
-	 		set_array
+	 		Prompt_for_list
+	 		
 
 	 		;;
 	 	*)  echo "Invalid selection. Please enter 1 or 2."
@@ -50,10 +51,10 @@ load_array_to_use(){
 	        echo "your saved arrays: "
 	        ls data/*.txt | xargs -n 1 basename
 	        sleep 1
+	        set_array
 	    else
 	        echo "No saved arrays found."
 	        sleep 1
-	        Prompt_for_list
 	        return
 	    fi
 }
